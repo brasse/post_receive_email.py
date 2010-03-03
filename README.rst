@@ -41,7 +41,7 @@ The script uses the following configuration variables:
     This password will be used when authenticating the email sender with
     the SMTP host.
 **hook.post-receive-logfile**
-    Debuging informatun will be logged to this file.
+    Debuging information will be logged to this file.
 
 Licence
 =======
