@@ -77,14 +77,14 @@ def get_commits(old_rev, new_rev):
                          stdout=subprocess.PIPE)
     return p.stdout.read().split('\n')
 
-def parse_post_receice_line(l):
+def parse_post_receive_line(l):
     return l.split()
 
 def post_receive(mailer):
     lines = sys.stdin.readlines()
     commits = {}
     for line in lines:
-        old_rev, new_rev, ref_name = parse_post_receice_line(line)
+        old_rev, new_rev, ref_name = parse_post_receive_line(line)
         commits[ref_name] = get_commits(old_rev, new_rev)
     process_commits(commits, mailer)
 
