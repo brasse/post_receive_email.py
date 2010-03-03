@@ -60,7 +60,8 @@ def git_rev_parse(hash, short=False):
         args.append('--short')
     args.append(hash)
     p = subprocess.Popen(args, stdout=subprocess.PIPE)
-    return p.stdout.read()
+    # Cut off the last \n character.
+    return p.stdout.read()[:-1]
     
 def process_commits(commits, mailer):
     for ref_name in commits.keys():
