@@ -114,8 +114,6 @@ def main():
     with open(log_file_path, 'a') as log_file:
         try:
             config = get_config_variables()
-            log_file.write(str(config))
-            log_file.write('\n')
             mailer = Mailer(config[SMTP_HOST], config[SMTP_PORT],
                             config[SMTP_SENDER], config[SMTP_SENDER_PASSWORD],
                             config[MAILINGLIST])
