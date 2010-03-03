@@ -18,12 +18,13 @@ POST_RECEIVE_LOGFILE = 'hooks.post-receive-logfile'
 
 class Mailer(object):
     def __init__(self, smtp_host, smtp_port,
-                 sender, sender_password, recipients):
+                 sender, sender_password, recipients, subject_prefix):
         self.smtp_host = smtp_host
         self.smtp_port = smtp_port
         self.sender = sender
         self.sender_password = sender_password
         self.recipients = recipients
+        self.subject_prefix = subject_prefix
 
     def send(self, subject, message):
         if not self.recipients:
@@ -32,6 +33,8 @@ class Mailer(object):
         mime_text = MIMEText(message, _charset='utf-8')
         mime_text['From'] = self.sender
         mime_text['To'] = ', '.join(self.recipients)
+        if self.subject_prefix:
+            subject = '%s %s' % (self.subject_prefix, subject)
         mime_text['Subject'] = subject
 
         server = smtplib.SMTP(self.smtp_host, self.smtp_port)
@@ -69,10 +72,10 @@ def process_commits(commits, mailer):
         for i, commit in enumerate(commits[ref_name]):
             commit_hash = git_rev_parse(commit, short=True)
             if use_index:
-                subject = 'ubet %s commit (#%d) %s' % (ref_name, i + 1, 
+                subject = '%s commit (#%d) %s' % (ref_name, i + 1, 
                                                        commit_hash)
             else:
-                subject = 'ubet %s commit %s' % (ref_name, commit_hash)
+                subject = '%s commit %s' % (ref_name, commit_hash)
             message = git_show(commit)
             mailer.send(subject, message)
             
@@ -122,7 +125,7 @@ def main():
             config = get_config_variables()
             mailer = Mailer(config[SMTP_HOST], config[SMTP_PORT],
                             config[SMTP_SENDER], config[SMTP_SENDER_PASSWORD],
-                            config[MAILINGLIST])
+                            config[MAILINGLIST], config[EMAILPREFIX])
             post_receive(mailer)
         except:
             log_file.write('%s\n' % time.strftime('%Y-%m-%d %X'))
