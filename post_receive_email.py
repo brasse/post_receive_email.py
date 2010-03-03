@@ -65,9 +65,14 @@ def git_rev_parse(hash, short=False):
     
 def process_commits(commits, mailer):
     for ref_name in commits.keys():
-        for commit in commits[ref_name]:
-            subject = 'ubet %s commit %s' % (ref_name, 
-                                             git_rev_parse(commit, short=True))
+        use_index = len(commits[ref_name]) > 1
+        for i, commit in enumerate(commits[ref_name]):
+            commit_hash = git_rev_parse(commit, short=True)
+            if use_index:
+                subject = 'ubet %s commit (#%d) %s' % (ref_name, i + 1, 
+                                                       commit_hash)
+            else:
+                subject = 'ubet %s commit %s' % (ref_name, commit_hash)
             message = git_show(commit)
             mailer.send(subject, message)
             
