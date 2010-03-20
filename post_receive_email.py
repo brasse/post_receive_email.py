@@ -26,12 +26,13 @@ class Mailer(object):
         self.recipients = recipients
         self.subject_prefix = subject_prefix
 
-    def send(self, subject, message):
+    def send(self, subject, reply_to, message):
         if not self.recipients:
             return
 
         mime_text = MIMEText(message, _charset='utf-8')
         mime_text['From'] = self.sender
+        mime_text['Reply-To'] = reply_to
         mime_text['To'] = ', '.join(self.recipients)
         if self.subject_prefix:
             subject = '%s %s' % (self.subject_prefix, subject)
@@ -77,7 +78,10 @@ def process_commits(commits, mailer):
             else:
                 subject = '%s commit %s' % (ref_name, commit_hash)
             message = git_show(commit)
-            mailer.send(subject, message)
+            match = re.search(r'Author: (.+)', message)
+            assert match
+            reply_to = match.group(1)
+            mailer.send(subject, reply_to, message)
             
 
 def get_commits(old_rev, new_rev):
