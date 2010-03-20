@@ -104,7 +104,7 @@ def post_receive(mailer):
 def get_config_variables():
     def optional(variable):
         config[variable] = git_config_get(variable)
-    def must_have(variable, type_=str):
+    def required(variable, type_=str):
         v = git_config_get(variable)
         if not v:
             raise RuntimeError('This script needs %s to work.' % variable)
@@ -115,10 +115,10 @@ def get_config_variables():
 
     config = {}
     optional(EMAILPREFIX)
-    must_have(SMTP_HOST)
-    must_have(SMTP_PORT, int)
-    must_have(SMTP_SENDER)
-    must_have(SMTP_SENDER_PASSWORD)
+    required(SMTP_HOST)
+    required(SMTP_PORT, int)
+    required(SMTP_SENDER)
+    required(SMTP_SENDER_PASSWORD)
     recipients(MAILINGLIST)
     return config
 
