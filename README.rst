@@ -16,6 +16,7 @@ Status
 The script:
 
 * Always uses TLS when sending emails.
+* Sets the Reply-To header to the author of the commit.
 * Only handles commits. No effort has yet been made to handle merge commits.
 
 I will continue to develop this script as the need for more
