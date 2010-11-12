@@ -68,7 +68,7 @@ def git_rev_parse(hash, short=False):
     return p.stdout.read()[:-1]
 
 def get_commit_info(hash):
-    p = subprocess.Popen(['git', 'show', '--pretty=format:%s%n%h', hash], 
+    p = subprocess.Popen(['git', 'show', '--pretty=format:%s%n%h', '-s', hash], 
                          stdout=subprocess.PIPE)
     s = StringIO(p.stdout.read())
     def undefined(): 
