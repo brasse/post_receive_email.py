@@ -27,7 +27,6 @@ class Mailer(object):
         self.sender = sender
         self.sender_password = sender_password
         self.recipients = recipients
-        # self.subject_prefix = subject_prefix
 
     def send(self, subject, reply_to, message):
         if not self.recipients:
