@@ -32,6 +32,26 @@ The script uses the following configuration variables:
 **hooks.emailprefix**
     All emails will have their subjects prefixed with the value of this 
     variable
+**hooks.smtp-subject**
+    If this variable is set the subject line will be formatted according
+    to this template. The format is the same as for Python string
+    interpolation when using dictionaries for the values.
+
+    The available keys are: 
+
+        * ``%(prefix)s``  - The value of hooks.emailprefix.
+        * ``%(ref_name)s`` - The ref name sent to post_receive 
+          (eg. refs/heads/master)
+        * ``%(hash)s``    - The abbreviated commit hash.
+        * ``%(index)s``   - An individual commit's order number among all the
+          commits being pushed.
+        * ``%(message)s`` - The first line of the commit message.
+
+    The default subject template is 
+    ``%(prefix)s %(ref_name)s commit %(hash)s`` if one commit is being pushed
+    and ``%(prefix)s %(ref_name)s commit #%(index)s %(hash)s`` if more than
+    one is being pushed.
+
 **hooks.smtp-host**
     Emails will be sent using this SMTP host.
 **hooks.smtp-port**
